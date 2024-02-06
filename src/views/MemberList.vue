@@ -7,15 +7,15 @@
                     <th>Id</th>
                     <th>이름</th>
                     <th>이메일</th>
-                    <th></th>
+                    <th>주문수량</th>
                 </tr>
             </thead>
             <tbody>
-            <tr th:each = "author : ${authorList}">
-                <td th:text="${author.id}"></td>
-                <td th:text="${author.name}"></td>
-                <td th:text="${author.email}"></td>
-                <td><a th:href="@{|/author/detail/${author.id}|}">상세보기</a></td>
+            <tr v-for="member in memberList" :key="member.id">
+                <td>{{member.id}}</td>
+                <td>{{member.name}}</td>
+                <td>{{member.email}}</td>
+                <td>{{member.orderCount}}</td>
             </tr>
             </tbody>
         </table>
@@ -23,11 +23,22 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-    setup () {
-        
-
-        return {}
+    data(){
+        return {
+            memberList:[]
+        }
+    },
+    async created(){
+        try{
+            const token = localStorage.getItem('token')
+            const headers =  {Authorization : `Bearer ${token}`};
+            const response = await axios.get("http://localhost:8080/members", {headers});
+            this.memberList = response.data;
+        } catch(error){
+            console.log(error)
+        }
     }
 }
 </script>
