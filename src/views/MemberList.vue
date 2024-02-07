@@ -15,7 +15,9 @@
                 <td>{{member.id}}</td>
                 <td>{{member.name}}</td>
                 <td>{{member.email}}</td>
-                <td>{{member.orderCount}}</td>
+                <td>
+                    <a :href="`/member/${member.id}/orders`">{{member.orderCount}}</a>
+                </td>
             </tr>
             </tbody>
         </table>
