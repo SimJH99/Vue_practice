@@ -6,14 +6,14 @@
                     <th>#</th>
                     <th>회원Email</th>
                     <th>주문상태</th>
-                    <th v-if="isAdmin === 'true'">ACTION</th>
+                    <th v-if="isAdmin === true">ACTION</th>
                 </thead>
                 <template v-for="order in orderList" :key="order.id">
                     <tr @click="toggleOrder(order.id)" style="cursor: pointer">
                         <td>{{order.id}}</td>
                         <td>{{order.memberEmail}}</td>
                         <td>{{order.orderStatus}}</td>
-                        <td v-if="isAdmin === 'true'"><button v-if="order.orderStatus==='ORDERED'" @click.stop="cancelOrder(order.id)">CANCEL</button></td>
+                        <td v-if="isAdmin === true"><button v-if="order.orderStatus==='ORDERED'" @click.stop="cancelOrder(order.id)">CANCEL</button></td>
                     </tr>
                     <tr v-if="visibleOrder.has(order.id)">
                         <td colspan="4">
