@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="page-header">
+        <div class="page-header text-center" style="margin-top: 20px">
             <h1>로그인</h1>
         </div>
         <!-- submit은 기본적으로 폼 제출시 브라우저가 페이지를 새로고침하므로 해당 동작을 막기 위해 prevent사용 -->
@@ -48,7 +48,9 @@ export default {
                     localStorage.setItem("email", decoded.sub);
                     localStorage.setItem("Role", decoded.role);
                     localStorage.setItem("token", token);
-                    this.$router.push("/");
+                    // created함수는 reload될때 1번만 실행되는 hook함수
+                    // 그런데, router.push를 통한 화면전환은 reload를 실행시키지 않으므로, created함수 호출이 되지 않음
+                    window.location.href = "/";
                 } else{
                     console.log("200 ok but not token");
                     alert("Login Failed");
