@@ -11,6 +11,10 @@
                 <input v-model="searchValue" type="text" >
                 <button type="submit" @click="resetPage()">검색</button>
             </form>
+            <div>
+                <button @click="addCart" class="btn btn-secondary" style="margin: 10px;">장바구니</button>
+                <button @click="placeOrder" class="btn btn-success" style="margin: 10px;">주문하기</button>
+            </div>
         </div>
 
         <table class="table">
@@ -22,18 +26,17 @@
                     <th>가격</th>
                     <th>수량</th>
                     <th>재고수량</th>
-                    <th>id</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="item in itemList" :key="item.id">
-                    <td><input type="checkbox"></td>
+                    <!-- 체크박스를 선택하면 vaule가 true가 담기게 됨 -->
+                    <td><input type="checkbox" v-model="selectedItems[item.id]"></td>
                     <td><img :src="getImage(item.id)" style="height: 100px; width: auto" alt=""></td>
                     <td>{{item.name}}</td>
                     <td>{{item.price}}</td>
                     <td>{{item.stockQuantity}}</td>
-                    <td><input type="number" min="1" style="width: 60px;"></td>
-                    <td>{{item.id}}</td>
+                    <td><input type="number" v.model="item.quantity" min="1" style="width: 60px;"></td>
                 </tr>
             </tbody>
         </table>
@@ -53,6 +56,7 @@ export default {
             searchType: 'optional',
             searchValue: '',
             isLastPage: false,
+            selectedItems: {},
         }
     },
     created(){
@@ -64,11 +68,27 @@ export default {
         window.addEventListener('scroll', this.scrollPagination);
     },
     methods: {
+        placeOrder(){
+            // 데이터 형식
+            // {
+            //     "1":true,
+            //     "2":false,
+            // }
+            // Object.keys : 위의 데이터 구조에서 1,2 등 key값 추출하는 메서드
+            
+            const orderItems = Object.keys(this.selectedItems)
+                                    .filter(key=>this.selectedItems[key]===true)
+                                    .map(key => {
+                                        const item = this.itemList.find(item => item.id == key);
+                                        return {itemId:item.id,count:item.quantity};
+                                    })
+            console.log(orderItems);
+        },
         scrollPagination(){
             //innerHeight :  뷰포트(내가 보고있는 창화면)의 내부높이를 픽셀단위로 변환
             // scrollY : 스크롤을 통해 Y축을 이동한 거리
             // offsetHeight : 전체브라우저 창의 높이
-            const nearBotton = window.innerHeight + window.scrollY >= document.body.offsetHeight - 500;
+            const nearBotton = window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
             if(nearBotton && !this.isLastPage){
                 this.currentPage++;
                 this.loadItems();
@@ -92,7 +112,7 @@ export default {
             }
             console.log("data 호출")
             const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/items`, {params});
-            const addItemList = response.data;
+            const addItemList = response.data.map(item=>({...item, quantity:1}))
             if(addItemList.length < this.pageSize){
                 this.isLastPage = true;
             }
