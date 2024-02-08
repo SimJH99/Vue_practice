@@ -8,8 +8,8 @@
                     <option value="name">상품명</option>
                     <option value="category">카테고리</option>
                 </select>
-                <input v-model="searchValue" type="text">
-                <button type="submit">검색</button>
+                <input v-model="searchValue" type="text" >
+                <button type="submit" @click="resetPage()">검색</button>
             </form>
         </div>
 
@@ -22,6 +22,7 @@
                     <th>가격</th>
                     <th>수량</th>
                     <th>재고수량</th>
+                    <th>id</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +32,8 @@
                     <td>{{item.name}}</td>
                     <td>{{item.price}}</td>
                     <td>{{item.stockQuantity}}</td>
-                    <td><input type="number" min="0" style="width: 60px;"></td>
+                    <td><input type="number" min="1" style="width: 60px;"></td>
+                    <td>{{item.id}}</td>
                 </tr>
             </tbody>
         </table>
@@ -48,14 +50,30 @@ export default {
             itemList: [],
             pageSize: 10,
             currentPage: 0,
-            searchType: 'name',
+            searchType: 'optional',
             searchValue: '',
+            isLastPage: false,
         }
     },
     created(){
-        this.getImage();
+        this.loadItems();
+    },
+    // mounted : window dom객체가 생성된 이후에 실행되는 hook함수
+    mounted(){
+        // scroll 동작이 발생할떄마다 scrollPagination함수 호출된다는 의미
+        window.addEventListener('scroll', this.scrollPagination);
     },
     methods: {
+        scrollPagination(){
+            //innerHeight :  뷰포트(내가 보고있는 창화면)의 내부높이를 픽셀단위로 변환
+            // scrollY : 스크롤을 통해 Y축을 이동한 거리
+            // offsetHeight : 전체브라우저 창의 높이
+            const nearBotton = window.innerHeight + window.scrollY >= document.body.offsetHeight - 500;
+            if(nearBotton && !this.isLastPage){
+                this.currentPage++;
+                this.loadItems();
+            }
+        },
         getImage(id){
             return`${process.env.VUE_APP_API_BASE_URL}/item/${id}/image`
         },
@@ -72,12 +90,21 @@ export default {
             } else if(this.searchType === "category"){
                 params.catogory = this.searchValue;
             }
-            console.log(params)
+            console.log("data 호출")
             const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/items`, {params});
-            this.itemList = response.data;
+            const addItemList = response.data;
+            if(addItemList.length < this.pageSize){
+                this.isLastPage = true;
+            }
+            this.itemList = [...this.itemList,...addItemList];
             } catch(error){
                 console.log(error)
             }
+        },
+        resetPage(){
+            this.currentPage = 0;
+            this.itemList=[];
+            this.isLastPage = false;
         }
     }
 }
