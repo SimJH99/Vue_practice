@@ -36,7 +36,7 @@
                     <td>{{item.name}}</td>
                     <td>{{item.price}}</td>
                     <td>{{item.stockQuantity}}</td>
-                    <td><input type="number" v.model="item.quantity" min="1" style="width: 60px;"></td>
+                    <td><input type="number" v-model="item.quantity" min="1" style="width: 60px;"></td>
                 </tr>
             </tbody>
         </table>
