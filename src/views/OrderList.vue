@@ -1,7 +1,7 @@
 <template>
     <OrderListComponenet
     :isAdmin="true"
-    apiUrl="http://localhost:8080/orders"
+    apiUrl="/orders"
     />
 </template>
 
@@ -10,6 +10,6 @@ import OrderListComponenet from '@/components/OrderListComponenet.vue';
 export default {
     components:{
         OrderListComponenet
-    }
+    },
 }
 </script>

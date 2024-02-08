@@ -36,7 +36,7 @@ export default {
         try{
             const token = localStorage.getItem('token')
             const headers =  {Authorization : `Bearer ${token}`};
-            const response = await axios.get("http://localhost:8080/members", {headers});
+            const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/members`, {headers});
             this.memberList = response.data;
         } catch(error){
             console.log(error)

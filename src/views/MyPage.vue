@@ -20,7 +20,7 @@
         </table>
     </div>
     <OrderListComponenet
-    :isAdmin="false" apiUrl="http://localhost:8080/member/myorders"
+    :isAdmin="false" apiUrl="/member/myorders"
     />
 </template>
 
