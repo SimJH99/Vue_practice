@@ -24,8 +24,8 @@
                     <th>제품사진</th>
                     <th>제품명</th>
                     <th>가격</th>
-                    <th>수량</th>
                     <th>재고수량</th>
+                    <th>주문수량</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,7 +68,7 @@ export default {
         window.addEventListener('scroll', this.scrollPagination);
     },
     methods: {
-        placeOrder(){
+        async placeOrder(){
             // 데이터 형식
             // {
             //     "1":true,
@@ -80,9 +80,19 @@ export default {
                                     .filter(key=>this.selectedItems[key]===true)
                                     .map(key => {
                                         const item = this.itemList.find(item => item.id == key);
-                                        return {itemId:item.id,count:item.quantity};
+                                        return {itemId:item.id, count:item.quantity};
                                     })
-            console.log(orderItems);
+            const token = localStorage.getItem('token');
+            const headers = token ? {Authorization : `Bearer ${token}`} : {};
+            try{
+                await axios.post(`${process.env.VUE_APP_API_BASE_URL}/order/create`, orderItems ,{headers});
+                console.log(orderItems);
+                alert("주문완료.");
+                window.location.reload();
+            } catch(error){
+                console.log(error);
+                alert("주문이 실패되었습니다.");
+            }
         },
         scrollPagination(){
             //innerHeight :  뷰포트(내가 보고있는 창화면)의 내부높이를 픽셀단위로 변환
