@@ -84,13 +84,12 @@ export default {
             //     "2":false,
             // }
             // Object.keys : 위의 데이터 구조에서 1,2 등 key값 추출하는 메서드
-            
             const orderItems = Object.keys(this.selectedItems)
                                     .filter(key=>this.selectedItems[key]===true)
                                     .map(key => {
                                         const item = this.itemList.find(item => item.id == key);
                                         return {itemId:item.id, count:item.quantity};
-                                    })
+                                    });
             const token = localStorage.getItem('token');
             const headers = token ? {Authorization : `Bearer ${token}`} : {};
             try{
@@ -146,19 +145,29 @@ export default {
             this.isLastPage = false;
         },
         async delteItem(itemId){
-        if(confirm("정말 삭제 하시겠습니까")){
-            try{
-                const token = localStorage.getItem('token');
-                const headers =  {Authorization : `Bearer ${token}`};
-                await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/item/${itemId}/delete`, {headers});
-                alert("삭제완료");
-                window.location.reload();
-            } catch(error){
-                console.log(error);
-                alert("삭제실패");
+            if(confirm("정말 삭제 하시겠습니까")){
+                try{
+                    const token = localStorage.getItem('token');
+                    const headers =  {Authorization : `Bearer ${token}`};
+                    await axios.delete(`${process.env.VUE_APP_API_BASE_URL}/item/${itemId}/delete`, {headers});
+                    alert("삭제완료");
+                    window.location.reload();
+                } catch(error){
+                    console.log(error);
+                    alert("삭제실패");
+                }
             }
-        }
-      },
+        },
+        addCart(){
+            const orderItems = Object.keys(this.selectedItems)
+                                    .filter(key=>this.selectedItems[key]===true)
+                                    .map(key => {
+                                        const item = this.itemList.find(item => item.id == key);
+                                        return {itemId:item.id, name: item.name, count:item.quantity};
+                                    });
+            orderItems.forEach(item => this.$store.commit('addToCart', item));
+            
+        },
     }
 }
 </script>

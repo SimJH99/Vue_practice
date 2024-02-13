@@ -5,6 +5,7 @@ import ItemList from '@/views/ItemList.vue';
 import { memberRoutes } from "./memberRoute.js";
 import { orderRoutes } from "./orderRouter.js";
 import { itemRoutes } from "./itemRouter.js";
+import BasicComponent from '@/components/BasicComponent.vue';
 
 const routes = [
     {
@@ -18,6 +19,11 @@ const routes = [
         path: '/login',
         name: 'LoginComponent',
         component: LoginComponent,
+    },
+    {
+        path: '/basic',
+        name: 'basicComponent',
+        component: BasicComponent,
     },
     // ...은 스프레드 연산자로 불리고, 주로 배열요소를 다른 배열요소에 합할 때 사용
     ...memberRoutes,
