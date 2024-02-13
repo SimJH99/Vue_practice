@@ -23,7 +23,7 @@ export default createStore({
     mutations:{
         // addToCart 함수는 외부 컴포넌트(또는 action)에서 호출될 예정
         addToCart(state, item){
-            const existItem = state.cartItems.find(i => i.id === item.id);
+            const existItem = state.cartItems.find(i => i.itemId === item.itemId);
             if(existItem){
                 existItem.count += item.count;
             } else {
