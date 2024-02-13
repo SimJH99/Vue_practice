@@ -1,5 +1,6 @@
 import ItemList from '@/views/ItemList.vue';
 import ItemListMng from '@/views/ItemListMng.vue';
+import ItemCreate from '@/views/ItemCreate.vue';
 
 export const itemRoutes = [
     {
@@ -11,5 +12,10 @@ export const itemRoutes = [
         path: '/items/manage',
         name: 'ItemListMng',
         component: ItemListMng,
-    }
+    },
+    {
+        path: '/item/create',
+        name: 'ItemCreate',
+        component: ItemCreate,
+    },
 ];
