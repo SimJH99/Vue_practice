@@ -33,7 +33,23 @@ export default createStore({
             state.totalQuantity = parseInt(state.totalQuantity) + item.count;
 
             updateLocalStorage(state.cartItems, state.totalQuantity);
+        },
+        clearCart(state){
+            state.cartItems = [];
+            state.totalQuantity = 0;
+            updateLocalStorage(state.cartItems, state.totalQuantity);
         }
+    },
+    // actions를 통해 여러 뮤테이션을 연속적으로 커밋하거나, 비동기 작업을 진행.
+    // 일반적으로. component에서 actions의 메서드를 호출하고, actions에서 mutation메서드 호출.
+    actions:{
+        // context매개변수가 주입. context매개변수 안에 state, commit등이 존재
+        addToCart(context, item){
+            context.commit('addTocart', item);
+        },
+        clearCart(context){
+            context.commit('addTocart');
+        },
     },
     getters: {
         getCartItems: state => state.cartItems,

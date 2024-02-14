@@ -55,6 +55,7 @@
 
 <script>
 import axios from 'axios';
+import { mapActions } from 'vuex';
 export default {
     props: ['isAdmin', 'pageTitle'],
     data(){
@@ -77,6 +78,7 @@ export default {
         window.addEventListener('scroll', this.scrollPagination);
     },
     methods: {
+        ...mapActions(['addtoCart']),
         async placeOrder(){
             // 데이터 형식
             // {
@@ -141,6 +143,7 @@ export default {
         },
         resetPage(){
             this.currentPage = 0;
+            this.selectedItems=[];
             this.itemList=[];
             this.isLastPage = false;
         },
@@ -165,7 +168,17 @@ export default {
                                         const item = this.itemList.find(item => item.id == key);
                                         return {itemId:item.id, name: item.name, count:item.quantity};
                                     });
-            orderItems.forEach(item => this.$store.commit('addToCart', item));
+            // orderItems.forEach(item => this.$store.commit('addToCart', item));
+            orderItems.forEach(item => this.$store.dispatch('addToCart', item));
+
+            if(orderItems.length < 1){
+                alert("주문대상 물건이 없습니다.")
+                return;
+            }
+            if (!confirm(`${orderItems.length}개를 주문하시겠습니까?`)){
+                console.log("주문이 취소 되었습니다.");
+                return;
+            }
             
         },
     }
